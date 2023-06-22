@@ -1,0 +1,176 @@
+################## LINEAR MODELS ##################
+##What it does, is try to fit a single line to explain the data as best as possible.
+##Matrix (columns individuals, rows genes)
+##Columns : Individuals
+##Rows : Genes
+
+##We try to find genes which have statistically difference average values between the two classes
+## Plot : Find Average of expression (dot) and the height is the difference.
+##We see in the plot that dots represent individuals for 1 gene and their expression.
+##We do this for every gene.
+
+
+## Expression = bo + b1*F (constant + coef. of factor * effect of factor ). We try to explain the expression values in terms of a factor (F). 1 Condition is Healthy (0)/Sick (1).  We try to find genes affected by the condition (sick) and so we want to explain the expression levels through the condition. If we find genes that fit well in the model, then those genes are those beeing affected by beeing healthy/sick
+##We apply this process for EVERY GENE SEPERATELY not all genes together
+
+##Since the line is straight, then 2 consecutive points will always differ by the same amount as the next ones and so on by Δ(expr). We cant fit the line to every type of data, meaning they cant be explained by a straight line (maybe can be explained by exponential)
+
+##Let F: age ------> CONTINUOUS VARIABLE
+## E = b0 + b1*age --> If age = 0, E = b0 (intercept - average prediction for the expression levels for age = 0. What this models predicts, is that when increasing age by 1 point, the expression levels change by an amount equal to b1 (slope). b1 > 0: (/), b1<0: (\)
+
+lm(E~Age) #Explain expression levels as a function of the Age. Performs statistical evaluation on the significance of age on the expression of the values
+
+
+
+
+
+#># DISCRETE EXPLANATORY VARIABLES (_FACTORS_) ##
+## Healthy/Sick or Smoke/Dont-Smoke or Drud/No-Drug 
+
+## MEANS MODEL ## --> Explain expression level through the below function
+## E = b1*x1 + b2*x2 (x : factor with 2 levels - ex. healthy/sick). We say individual has Healthy: x1 = 1 (when healthy), x2 = 0 (not sick) --> E = b1*1 + b2*0 --> E = b1                   (this is the mean expression values of all the individuals is around b1)         Sick:  x1 = 0 (not healthy), x2 = 1 (when sick) --> E = b2
+
+##WE CARE ABOUT B2-B1 --> Δ = b2 - b1 --> H0: Δ=0 // H1:Δ#0. What we test is if the difference is different to zero  (the statistical significance) (of their difference)
+
+## Gene 1
+healthy = c(2.4, 7, 2.3, 3.1)
+sick = c(21, 22.3, 16, 8.2)
+
+expression = c(healthy, sick) #Concatenate vectors
+expression
+
+condition = factor(c(rep(0,4), rep(1,4)), labels = c("healthy", "sick")) ## We set the level of healthy to 0 and the level of sick to 1, and we assign to 0 the healthy, and the sick to 1. If we put rep(1,4), rep(0,4) --> We get sick first then healthy. 0: Basic level
+condition
+
+mymod = lm(expression~condition + 0) #Since we have MEANS MODEL we need +0. 
+summary(mymod)
+##Coefficients:
+##conditionhealthy: Estimate: b1 p-value assigned to b1
+##conditionsick: Estimate: b2 p-value assigned to b2
+##The 2 p-values dont tell us if healthy is different than sick, but if the b1 and b2 are statistically different than 0. p-value < 0.05 --> The b is stat.sign different than 0.
+##This tells us only if the estimations are different (the 2 means of healthy vs sick) and not if the b1 and b2 are statistically different from each other
+
+mean(healthy)
+mean(sick)
+
+##Overall should be used with contrast model
+
+## MEANS REFERENCE MODEL ##
+
+##E = b0+b1*x x = 0 (healthy) --> E = b0 // x = 1 (sick) --> E = b0+b1
+## The difference is now is b0 + b1 - b0 = b1
+## If we estimate b1 and it is statistically significant than 0, then the 2 condition expressions for that gene are statistically significant different, since b1 represents the difference between the 2 conditions
+
+mymod_ref = lm( expression ~ condition)
+summary(mymod_ref)
+##Coefficients:
+##Intercept: b0 --> Represents mean value of reference level which is healthy
+##conditionsick: Shows how much higher the mean expression level of that condition is (b1). The mean expression for condition level is Intercept + This (b0 + b1). If we get p<0.05 then we reject the H0, and we say that for this data the expression level for the sick is stat.sign. different than of the healthy
+
+
+### MORE THAN 1 EXPLANATORY VARIABLES ### (no interaction between the variables)
+## Let gender + health condition
+
+## E = b0 + b1x +b2g (gender)
+##Reference level needs 1 condition for each of the two factors.
+##We will set male = 0, healthy = 0.
+##> E = b0 (Male Healthy individual)
+##> E = b0 + b1 (Male Sick individual). If we estimate b1 != 0, then it means beeing sick affects expression level of males.
+##> E = b0 + b2 (Female Healthy individual)
+##> E = b0 + b1 + b2 (Female Sick individual). For females difference is b0+b1+b2-b0-b2=b1
+
+## The b1 is the same in both cases of male/female meaning that beeing sick is the same for both genders --> NO INTERACTION BETWEEN age + health condition
+
+##Since we are interested in the effect of one of the 2 conditions on the expression level, GIVEN that we have in our sample both female + males. We add the gender condition variable to our script
+
+
+healthy = c(2.4, 7, 2.3, 3.1,   6.4, 7.4, 8.1, 6.7)
+sick = c(21, 22.3, 16, 8.2,  25.2, 24.1, 23.2, 24.7)
+
+expression = c(healthy, sick) 
+expression
+
+
+condition = factor(c(rep(0,8), rep(1,8)), labels = c("healthy", "sick"))
+condition
+
+gender = factor(c(rep(0,4), rep(1,4), rep(0,4), rep(1,4)), labels = c("male", "female"))
+gender
+
+mymod_ni = lm(expression ~condition + gender) # ___NO INTERACTION___ BETWEEN THE 2 (+)
+summary(mymod_ni)
+
+##When we say no interaction we mean that the effect on expression level for beeing sick is the same for either male or female. 
+
+##Intercept: b0 (male healthy). Prediction of this differs from the mean of males. Because we dont assume any interraction between the 2 conditions. In order to assume no interraction the model has to shift some values to fit the line. This might mean there is interraction 
+##The estimates only represent mean values if there is truly no interaction between the 2 variables.
+##Beeing sick has an increase of b1 = 15.16  (regardless of gender) compared to intercept
+##Beeing female regardless sick or not has an effect of b2 = 5.4. Both of these are s.s.
+##This shows strong effect on expression levels
+
+mymod = lm(expression~condition)
+summary(mymod)
+##This shows the mean value of healthy people (5.4) regardless of gender
+
+
+##### Interaction #####
+
+## E = b0 + b1*x + b2g + b3*x*g
+## Male Healthy : E = b0
+## Male Sick : E = b0 + b1 # bi : The effect of beeing sick when male
+## Female Healthy : E = b0 + b2 : The effect of beeing female healthy
+## Female Sick : E = b0 + b2 + b3 : The effect of beeing female sick. It is negative when the female decrease, since without it the model would predict an increase.
+
+## If we assume the effect of beeing sick is same for both male/female then we wouldnt be able to see the decrease.
+
+healthy = c(2.4,7,2.3,3.1,   36.4, 37.4, 38.1, 36.7)
+sick = c(21,22.3,16,8.2,   1.4,3.2,4.5,4.4)
+
+expression = c(healthy,sick)
+expression
+
+condition = factor(c(rep(0,8), rep(1,8)), labels = c("healthy", "sick"))
+condition
+
+gender = factor(c(rep(0,4), rep(1,4), rep(0,4), rep(1,4)), labels = c("male","female"))
+gender
+
+mymod_i = lm(expression ~ condition*gender) # ___WITH INTERACTION___ (*)
+summary(mymod_i)
+
+##b0 (intercept),b1 (consick),b2 (for healthy genderfem, you go from b0 to b0+b2),        b3 (we would go from b0 to b0 + b1 for sick, then b0+b1+b2 for female and for sick female b0+b1+b2+b3 thats why negative, consick:genderfem)
+
+m1a = matrix(rnorm(25000, 100,10), 1000, 25) #50.000 gonidia, mesh timh 100, sd = 10(?), 1000 gonidia, 25 sthles
+m1b = matrix(rnorm(25000, 120,10), 1000, 25) #
+m2a = matrix(rnorm(25000, 120,10), 1000, 25)
+m2b = matrix(rnorm(25000, 100,10), 1000, 25)
+
+m = cbind(m1a,m1b,m2a,m2b) # 1000 gonidia (rows) x 100 individuals (cols)
+m
+
+
+condition = factor(c(rep(0,50), rep(1,50)), labels = c("healthy", "sick"))
+condition
+
+gender = factor(c(rep(0,25), rep(1,25), rep(0,25), rep(1,25)), labels = c("male","female"))
+gender
+
+mylm = lm(m[1,] ~ condition*gender) # For 1 gene
+summary(mylm)
+
+names(summary(mylm))
+
+summary(mylm)$coefficients[2,4]
+
+pvalues = vector(mode="numeric", length = nrow(m))
+pvalues
+
+for(i in 1:nrow(m)){
+    mylm = lm(m[i,] ~ condition*gender)
+    mysum = summary(mylm) #second row, 4th column for the effect of healthy sick
+    pvalues[i] = mysum$coefficients[2,4]
+}
+
+pvalues
+corr.pval = p.adjust(pvalues, method = 'fdr')
+corr.pval
