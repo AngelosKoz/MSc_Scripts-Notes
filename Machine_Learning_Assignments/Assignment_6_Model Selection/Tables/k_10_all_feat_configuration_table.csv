@@ -1,0 +1,19 @@
+	Classifier	Param 1	Param 2	ROC AUC Score
+Configuration 0	SVM	L1	C=0.1	0.7202804750831391
+Configuration 1	SVM	L1	C=1	0.7241319240402521
+Configuration 2	SVM	L1	C=10	0.7241300305312012
+Configuration 3	SVM	L2	C=0.1	0.7193273699138663
+Configuration 4	SVM	L2	C=1	0.6472325763833302
+Configuration 5	SVM	L2	C=10	0.6581830588191954
+Configuration 6	KNN	K=3	Weights=uniform	0.644956427298256
+Configuration 7	KNN	K=3	Weights=distance	0.644956427298256
+Configuration 8	KNN	K=5	Weights=uniform	0.6442264572218848
+Configuration 9	KNN	K=5	Weights=distance	0.6442264572218848
+Configuration 10	KNN	K=7	Weights=uniform	0.6327032415637813
+Configuration 11	KNN	K=7	Weights=distance	0.6327032415637813
+Configuration 12	RF	Trees=50	Criterion=gini	0.7042220818757438
+Configuration 13	RF	Trees=50	Criterion=entropy	0.7165745067288645
+Configuration 14	RF	Trees=100	Criterion=gini	0.708655312347892
+Configuration 15	RF	Trees=100	Criterion=entropy	0.7156047861035817
+Configuration 16	RF	Trees=150	Criterion=gini	0.7181498340928675
+Configuration 17	RF	Trees=150	Criterion=entropy	0.7118588031950611

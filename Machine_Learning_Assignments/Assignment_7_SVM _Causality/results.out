@@ -1,0 +1,58 @@
+# Forward backward selection on training set (80%)
+For a = 0.05:
+Forward_Selection_Variables: [0, 24, 21, 23]
+Backward_Selection_Variables: [21, 23, 27]
+
+
+For a = 0.01:
+Forward_Selection_Variables: [0, 24, 21, 23]
+Backward_Selection_Variables: [21, 23, 27]
+
+
+For a = 0.005:
+Forward_Selection_Variables: [0, 24, 21, 23]
+Backward_Selection_Variables: [21, 23, 27]
+
+# Filtering our training set with feature selection
+SVM with params {'kernel': 'linear', 'C': 0.1, 'probability': True}: Average ROC AUC: 0.9842105263157894
+SVM with params {'kernel': 'linear', 'C': 1, 'probability': True}: Average ROC AUC: 0.9833849329205366
+SVM with params {'kernel': 'linear', 'C': 5, 'probability': True}: Average ROC AUC: 0.9837461300309597
+SVM with params {'kernel': 'linear', 'C': 10, 'probability': True}: Average ROC AUC: 0.9843137254901961
+SVM with params {'kernel': 'linear', 'C': 20, 'probability': True}: Average ROC AUC: 0.9853973168214655
+Random Forest with params {'n_estimators': 25, 'criterion': 'entropy'}: Average ROC AUC: 0.9850877192982456
+Random Forest with params {'n_estimators': 50, 'criterion': 'entropy'}: Average ROC AUC: 0.9888028895768833
+Random Forest with params {'n_estimators': 100, 'criterion': 'entropy'}: Average ROC AUC: 0.9856553147574818
+Random Forest with params {'n_estimators': 150, 'criterion': 'entropy'}: Average ROC AUC: 0.9881836945304437
+Random Forest with params {'n_estimators': 200, 'criterion': 'entropy'}: Average ROC AUC: 0.9879256965944272
+
+
+
+SVM: ROC AUC on test set: 0.9877645502645503
+Random Forest: ROC AUC on test set: 0.9917328042328042
+
+
+Selected features: [0, 24, 21, 23]
+Feature names: [['mean radius' 'worst smoothness' 'worst texture' 'worst area']
+
+
+# Using the whole feature set (without feature selection)
+SVM with params {'kernel': 'linear', 'C': 0.1, 'probability': True}: Average ROC AUC: 0.986377708978328
+SVM with params {'kernel': 'linear', 'C': 1, 'probability': True}: Average ROC AUC: 0.9871001031991744
+SVM with params {'kernel': 'linear', 'C': 5, 'probability': True}: Average ROC AUC: 0.9894736842105264
+SVM with params {'kernel': 'linear', 'C': 10, 'probability': True}: Average ROC AUC: 0.9893704850361196
+SVM with params {'kernel': 'linear', 'C': 20, 'probability': True}: Average ROC AUC: 0.9884416924664603
+Random Forest with params {'n_estimators': 25, 'criterion': 'entropy'}: Average ROC AUC: 0.9852941176470589
+Random Forest with params {'n_estimators': 50, 'criterion': 'entropy'}: Average ROC AUC: 0.990970072239422
+Random Forest with params {'n_estimators': 100, 'criterion': 'entropy'}: Average ROC AUC: 0.991640866873065
+Random Forest with params {'n_estimators': 150, 'criterion': 'entropy'}: Average ROC AUC: 0.991124871001032
+Random Forest with params {'n_estimators': 200, 'criterion': 'entropy'}: Average ROC AUC: 0.9907636738906088
+
+
+SVM: ROC AUC on test set: 0.9943783068783069
+Random Forest: ROC AUC on test set: 0.9938822751322751
+
+
+# Running forward backward selection on all of the dataset (D)
+For a = 0.05:
+Forward_Selection_Variables: [0, 6, 15, 21, 23, 27]
+Backward_Selection_Variables: [6, 15, 21, 23]
